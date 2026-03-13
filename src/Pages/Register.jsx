@@ -1,6 +1,10 @@
+import toast from "react-hot-toast";
 import SocialLogin from "../Components/SocialLogin";
+import useAuth from "../Providers/useAuth";
 
 const Register = () => {
+
+    const {createUser, updateUserProfile} = useAuth();
 
     // handle data 
         const handleFormData = e => {
@@ -8,7 +12,21 @@ const Register = () => {
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password)
+        const name = form.name.value;
+        const photo = form.photo.value;
+
+        createUser(email, password)
+        .then((res) => {
+            console.log(res.user)
+            toast.success('Registation Successful')
+            
+            // update profile information
+            return updateUserProfile(name, photo)
+        })
+        .catch(err => {
+            toast.error(err.message)
+        })
+       
     }
 
   return (
@@ -18,6 +36,23 @@ const Register = () => {
           <form onSubmit={handleFormData} className="card-body w-full">
             <h2 className="text-center text-2xl font-bold my-2">Login Now!</h2>
             <fieldset className="fieldset">
+
+              <label className="label">Name</label>
+              <input
+                name="name"
+                type="text"
+                className="input w-full"
+                placeholder="Enter Your Full Name"
+              />
+
+              <label className="label">Photo</label>
+              <input
+                name="photo"
+                type="url"
+                className="input w-full"
+                placeholder="Photo URL"
+              />
+
               <label className="label">Email</label>
               <input
                 name="email"
