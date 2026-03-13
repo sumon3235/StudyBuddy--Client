@@ -1,8 +1,12 @@
 import React from "react";
 import SocialLogin from "../Components/SocialLogin";
 import { Link } from "react-router";
+import toast from "react-hot-toast";
+import useAuth from "../Providers/useAuth";
 
 const Login = () => {
+
+    const {loginUser} = useAuth();
 
     // handle data
     const handleFormData = e => {
@@ -11,6 +15,13 @@ const Login = () => {
         const email = form.email.value;
         const password = form.password.value;
         console.log(email, password)
+        loginUser(email, password)
+        .then(() => {
+            toast.success('Login Successful')
+        })
+        .catch( (err) => {
+            toast.error(err.message)
+        })
     }
 
   return (

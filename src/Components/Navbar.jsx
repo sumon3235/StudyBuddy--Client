@@ -1,10 +1,20 @@
-
 import { Link } from "react-router";
 import useAuth from "../Providers/useAuth";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
+  const { user, logOut, setUser } = useAuth();
 
-    const {user} = useAuth;
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        setUser(null);
+        toast.success("Logout Successful");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   return (
     <div>
@@ -42,11 +52,12 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          <Link to="/" className="text-xl">StudyBuddy</Link>
+          <Link to="/" className="text-xl">
+            StudyBuddy
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
-
-            {/* Small Device */}
+          {/* Small Device */}
           <ul className="menu menu-horizontal px-1">
             <li>
               <Link to="/all-assignments">Assignments</Link>
@@ -57,9 +68,44 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          {
-            !user ? <Link className="btn" to="/login">Login</Link> : 'ok'
-          }
+          {!user ? (
+            <Link className="btn" to="/login">
+              Login
+            </Link>
+          ) : (
+            <>
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  title={user?.displayName}
+                  className="cursor-pointer avatar"
+                >
+                  <div className="w-10 h-10 rounded-full border border-primary overflow-hidden">
+                    <img
+                      className="w-full h-full object-cover"
+                      alt={user?.displayName}
+                      src={user?.photoURL}
+                    />
+                  </div>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+                >
+                  <li>
+                    <Link to="/create-assignment">Create Assignment</Link>
+                  </li>
+                  <li>
+                    <Link to="/my-assignments">My Assignments</Link>
+                  </li>
+                  <li>
+                    <button onClick={handleLogOut}>Logout</button>
+                  </li>
+                </ul>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
