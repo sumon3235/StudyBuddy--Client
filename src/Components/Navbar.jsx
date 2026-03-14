@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto">
       <div className="navbar bg-base-100 shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">
@@ -39,7 +39,7 @@ const Navbar = () => {
               </svg>
             </div>
 
-            {/* Larger Devive */}
+            {/* Large Devive */}
             <ul
               tabIndex="-1"
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
@@ -48,7 +48,7 @@ const Navbar = () => {
                 <Link to="/all-assignments">Assignments</Link>
               </li>
               <li>
-                <a>Item 3</a>
+                {user && (<Link to="/pending-assignments">Pending Assignments</Link>)}
               </li>
             </ul>
           </div>
