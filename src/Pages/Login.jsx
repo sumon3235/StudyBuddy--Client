@@ -1,12 +1,15 @@
 import React from "react";
 import SocialLogin from "../Components/SocialLogin";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import useAuth from "../Providers/useAuth";
 
 const Login = () => {
 
     const {loginUser} = useAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from || '/'
 
     // handle data
     const handleFormData = e => {
@@ -17,7 +20,8 @@ const Login = () => {
         console.log(email, password)
         loginUser(email, password)
         .then(() => {
-            toast.success('Login Successful')
+            toast.success('Login Successful');
+            navigate(from, { replace: true });
         })
         .catch( (err) => {
             toast.error(err.message)

@@ -63,7 +63,7 @@ const Navbar = () => {
               <Link to="/all-assignments">Assignments</Link>
             </li>
             <li>
-              <a>Item 3</a>
+              {user && (<Link to="/pending-assignments">Pending Assignments</Link>)}
             </li>
           </ul>
         </div>

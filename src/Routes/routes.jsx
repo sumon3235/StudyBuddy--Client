@@ -4,6 +4,8 @@ import Home from "../Pages/Home";
 import AllAssignments from "../Pages/AllAssignments";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import PrivetRoutes from "./PrivetRoutes";
+import PendingAssignments from "../Components/PendingAssignments";
 
 
 const router = createBrowserRouter([
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
         {
             path: '/register',
             element: <Register></Register>
+        },
+        {
+            path: '/pending-assignments',
+            element: <PrivetRoutes><PendingAssignments></PendingAssignments></PrivetRoutes>
         }
     ]
   },

@@ -1,10 +1,14 @@
 import toast from "react-hot-toast";
 import SocialLogin from "../Components/SocialLogin";
 import useAuth from "../Providers/useAuth";
+import { useLocation, useNavigate } from "react-router";
 
 const Register = () => {
 
     const {createUser, updateUserProfile} = useAuth();
+       const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from || '/'
 
     // handle data 
         const handleFormData = e => {
@@ -19,7 +23,7 @@ const Register = () => {
         .then((res) => {
             console.log(res.user)
             toast.success('Registation Successful')
-            
+            navigate(from)
             // update profile information
             return updateUserProfile(name, photo)
         })
