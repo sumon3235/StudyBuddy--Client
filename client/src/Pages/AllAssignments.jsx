@@ -3,15 +3,33 @@ import axios from "axios";
 import { Link } from "react-router";
 import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const AllAssignments = () => {
   const { user } = useAuth();
+  const [count, setCount] = useState(0);
+  const [itemPerPage, setItemPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const numberOfPage = Math.ceil(count / itemPerPage);
+  const pages = [...Array(numberOfPage).keys()]
+  console.log(numberOfPage, pages)
+
+const handleCount = async() => {
+  const {data} = await axios.get(`${import.meta.env.VITE_APIURL}/count`)
+  setCount(data.count);
+}
+
+  useEffect(() => {
+  handleCount()
+  },[])
 
   const { data: assignments = [], isLoading, refetch } = useQuery({
-    queryKey: ["assignments"],
+    queryKey: ["assignments", currentPage, itemPerPage],
     queryFn: async () => {
       const res = await axios.get(
-        `${import.meta.env.VITE_APIURL}/all-assignments`,
+        `${import.meta.env.VITE_APIURL}/all-assignments?page=${currentPage}&size=${itemPerPage}`,
       );
       return res.data;
     },
@@ -61,9 +79,11 @@ const handleModernDelete = (id) => {
       </div>
     ), { 
       duration: Infinity,
-      id: 'delete-confirm'  // ← unique id দাও
+      id: 'delete-confirm' 
     });
   };
+
+
   return (
     <div className="min-h-screen bg-base-200 py-12">
       <div className="max-w-7xl mx-auto px-4">
@@ -177,7 +197,15 @@ const handleModernDelete = (id) => {
             </div>
           ))}
         </div>
+      </div>
 
+      {/* Pagination btn */}
+      <div className="flex items-center justify-center my-10">
+        {
+          pages.map(page => 
+            <button onClick={() =>setCurrentPage(page)} key={page} className="join-item btn">{page + 1}</button>
+          )
+        }
       </div>
     </div>
   );
