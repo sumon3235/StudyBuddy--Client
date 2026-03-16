@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
 import useAuth from "../Providers/useAuth";
+import toast from "react-hot-toast";
 
 const AllAssignments = () => {
   const { user } = useAuth();
 
-  const { data: assignments = [], isLoading } = useQuery({
+  const { data: assignments = [], isLoading, refetch } = useQuery({
     queryKey: ["assignments"],
     queryFn: async () => {
       const res = await axios.get(
@@ -23,9 +24,50 @@ const AllAssignments = () => {
       </div>
     );
 
+  // handle delete assignment
+  const handleDelete = (id) => {
+    axios.delete(`${import.meta.env.VITE_APIURL}/assignments/${id}`)
+      .then(res => {
+        if (res.data.deletedCount > 0) {
+          toast.dismiss('delete-confirm');
+          toast.success("Assignment deleted successfully!");
+          refetch();
+        }
+      })
+  };
+
+  // handle delet mordern toast
+const handleModernDelete = (id) => {
+    toast((t) => (
+      <div className="flex gap-3 items-center">
+        <p className="font-medium">Are you sure?</p>
+        <div className="flex items-center gap-2">
+          <button
+            className="btn btn-sm bg-red-500 text-white"
+            onClick={() => {
+              toast.dismiss(t.id);
+              handleDelete(id);
+            }}
+          >
+            Delete
+          </button>
+          <button
+            className="btn btn-sm bg-green-500 text-white"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), { 
+      duration: Infinity,
+      id: 'delete-confirm'  // ← unique id দাও
+    });
+  };
   return (
     <div className="min-h-screen bg-base-200 py-12">
       <div className="max-w-7xl mx-auto px-4">
+
         {/* Title */}
         <div className="text-center mb-10">
           <h2 className="nunito-font text-4xl font-bold">All Assignments</h2>
@@ -53,6 +95,7 @@ const AllAssignments = () => {
               </Link>
 
               <div className="card-body">
+
                 {/* Title */}
                 <Link to={`/assignments/${assignment._id}`}>
                   <h3 className="nunito-font card-title hover:text-primary transition-colors">
@@ -70,15 +113,13 @@ const AllAssignments = () => {
                   <span className="badge badge-outline text-xs">
                     Marks: {assignment.marks}
                   </span>
-                  <span
-                    className={`badge text-xs ${
-                      assignment.difficulty === "easy"
-                        ? "badge-success"
-                        : assignment.difficulty === "medium"
-                          ? "badge-warning"
-                          : "badge-error"
-                    }`}
-                  >
+                  <span className={`badge text-xs ${
+                    assignment.difficulty === "easy"
+                      ? "badge-success"
+                      : assignment.difficulty === "medium"
+                      ? "badge-warning"
+                      : "badge-error"
+                  }`}>
                     {assignment.difficulty}
                   </span>
                 </div>
@@ -88,8 +129,10 @@ const AllAssignments = () => {
                   Due: {new Date(assignment.dueDate).toLocaleDateString()}
                 </p>
 
-                {/*View Buttons */}
+                {/* Buttons */}
                 <div className="card-actions justify-end mt-2 gap-2">
+
+                  {/* View */}
                   <Link
                     to={`/assignments/${assignment._id}`}
                     className="btn btn-primary btn-sm"
@@ -97,9 +140,9 @@ const AllAssignments = () => {
                     View
                   </Link>
 
-                  {/* Update Buttons */}
+                  {/* Update */}
                   {user?.email === assignment.creatorEmail ? (
-                    <div className="tooltip" data-tip="Edit Assignment">
+                    <div className="tooltip tooltip-success" data-tip="Edit Assignment">
                       <Link
                         to={`/update/${assignment._id}`}
                         className="btn btn-outline btn-sm"
@@ -108,19 +151,33 @@ const AllAssignments = () => {
                       </Link>
                     </div>
                   ) : (
-                    <div className="tooltip" data-tip="Only Creator Can Edit This" >
+                    <div className="tooltip tooltip-error" data-tip="Only Creator Can Edit This">
                       <button className="btn btn-sm" disabled>Update</button>
                     </div>
                   )}
 
-                  <button className="btn btn-error btn-outline btn-sm">
-                    Delete
-                  </button>
+                  {/* Delete */}
+                  {user?.email === assignment.creatorEmail ? (
+                    <div className="tooltip tooltip-success" data-tip="Delete Assignment">
+                      <button
+                        onClick={() => handleModernDelete(assignment._id)}
+                        className="btn btn-error btn-outline btn-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="tooltip tooltip-error tooltip-left" data-tip="Only Creator Can Delete This">
+                      <button className="btn btn-sm" disabled>Delete</button>
+                    </div>
+                  )}
+
                 </div>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );
