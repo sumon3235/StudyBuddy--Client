@@ -7,6 +7,7 @@ import Register from "../Pages/Register";
 import PrivetRoutes from "./PrivetRoutes";
 import PendingAssignments from "../Components/PendingAssignments";
 import CreateAssignment from "../Pages/CreateAssignment";
+import UpdateAssignment from "../Pages/UpdateAssignment";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         {
             path: '/create-assignment',
             element: <CreateAssignment></CreateAssignment>
+        },
+        {
+            path: '/update/:id',
+            element: <UpdateAssignment></UpdateAssignment>
         }
     ]
   },

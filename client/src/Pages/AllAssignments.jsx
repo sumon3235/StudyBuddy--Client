@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
+import useAuth from "../Providers/useAuth";
 
 const AllAssignments = () => {
+  const { user } = useAuth();
+
   const { data: assignments = [], isLoading } = useQuery({
     queryKey: ["assignments"],
     queryFn: async () => {
@@ -12,7 +15,6 @@ const AllAssignments = () => {
       return res.data;
     },
   });
-  console.log(assignments);
 
   if (isLoading)
     return (
@@ -37,7 +39,7 @@ const AllAssignments = () => {
           {assignments.map((assignment) => (
             <div
               key={assignment._id}
-              className="card bg-base-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              className="card bg-base-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
               {/* Thumbnail */}
               <Link to={`/assignments/${assignment._id}`}>
@@ -50,11 +52,13 @@ const AllAssignments = () => {
                 </figure>
               </Link>
 
-              <Link to={`/assignments/${assignment._id}`} className="card-body">
+              <div className="card-body">
                 {/* Title */}
-                <h3 className="nunito-font card-title hover:text-primary transition-colors">
-                  {assignment.title}
-                </h3>
+                <Link to={`/assignments/${assignment._id}`}>
+                  <h3 className="nunito-font card-title hover:text-primary transition-colors">
+                    {assignment.title}
+                  </h3>
+                </Link>
 
                 {/* Description */}
                 <p className="text-base-content/60 text-sm line-clamp-2">
@@ -84,22 +88,36 @@ const AllAssignments = () => {
                   Due: {new Date(assignment.dueDate).toLocaleDateString()}
                 </p>
 
-                {/* Buttons — e.preventDefault() দিয়ে Link এর click আটকাবে */}
-                <div
-                  className="card-actions justify-end mt-2 gap-2"
-                  onClick={(e) => e.preventDefault()}
-                >
+                {/*View Buttons */}
+                <div className="card-actions justify-end mt-2 gap-2">
                   <Link
-                    to={`/update/${assignment._id}`}
-                    className="btn btn-outline btn-sm"
+                    to={`/assignments/${assignment._id}`}
+                    className="btn btn-primary btn-sm"
                   >
-                    Update
+                    View
                   </Link>
+
+                  {/* Update Buttons */}
+                  {user?.email === assignment.creatorEmail ? (
+                    <div className="tooltip" data-tip="Edit Assignment">
+                      <Link
+                        to={`/update/${assignment._id}`}
+                        className="btn btn-outline btn-sm"
+                      >
+                        Update
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="tooltip" data-tip="Only Creator Can Edit This" >
+                      <button className="btn btn-sm" disabled>Update</button>
+                    </div>
+                  )}
+
                   <button className="btn btn-error btn-outline btn-sm">
                     Delete
                   </button>
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
         </div>
