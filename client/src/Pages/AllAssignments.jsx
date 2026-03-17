@@ -5,6 +5,7 @@ import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useEffect } from "react";
+import axiosSecure from "../utils/axiosSecure";
 
 const AllAssignments = () => {
   const { user } = useAuth();
@@ -14,7 +15,6 @@ const AllAssignments = () => {
 
   const numberOfPage = Math.ceil(count / itemPerPage);
   const pages = [...Array(numberOfPage).keys()]
-  console.log(numberOfPage, pages)
 
 const handleCount = async() => {
   const {data} = await axios.get(`${import.meta.env.VITE_APIURL}/count`)
@@ -44,7 +44,7 @@ const handleCount = async() => {
 
   // handle delete assignment
   const handleDelete = (id) => {
-    axios.delete(`${import.meta.env.VITE_APIURL}/assignments/${id}`)
+    axiosSecure.delete(`/assignments/${id}`)
       .then(res => {
         if (res.data.deletedCount > 0) {
           toast.dismiss('delete-confirm');

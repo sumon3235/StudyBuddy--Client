@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContex";
 import { auth } from "../Firebase/firebase.init";
+import axios from "axios"
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -11,14 +12,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-
 const AuthProvider = ({ children }) => {
   // Set A user State
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const googleProvider = new GoogleAuthProvider();
-
 
   // Login User With Email And Password
   const loginUser = (email, password) => {
@@ -40,13 +39,13 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-    // Google Login
+  // Google Login
   const googleLogin = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-    // Logout User
+  // Logout User
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
@@ -54,11 +53,27 @@ const AuthProvider = ({ children }) => {
 
   //   Set A Observer
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        await axios.post(
+          `${import.meta.env.VITE_APIURL}/jwt`,
+          { email: currentUser.email },
+          { withCredentials: true },
+        );
+      } else {
+        // Clear Token
+        await axios.post(
+          `${import.meta.env.VITE_APIURL}/logout`,
+          {},
+          { withCredentials: true },
+        );
+      }
+
       setLoading(false);
     });
-    return () => unsubscribe(); // cleanup
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {
@@ -69,7 +84,7 @@ const AuthProvider = ({ children }) => {
     loginUser,
     logOut,
     googleLogin,
-    updateUserProfile
+    updateUserProfile,
   };
 
   return (

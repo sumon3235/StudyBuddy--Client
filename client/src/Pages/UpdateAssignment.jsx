@@ -3,8 +3,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import axiosSecure from "../utils/axiosSecure";
 
 const UpdateAssignment = () => {
   const { id } = useParams();
@@ -15,8 +15,7 @@ const UpdateAssignment = () => {
   const { data: assignment = {}, isLoading } = useQuery({
     queryKey: ["assignment", id],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_APIURL}/assignments/${id}`
+      const res = await axiosSecure.get(`/assignments/${id}`
       );
       setDueDate(new Date(res.data.dueDate));
       return res.data;
@@ -26,8 +25,7 @@ const UpdateAssignment = () => {
   // PUT — update assignment
   const { mutate, isPending } = useMutation({
     mutationFn: (updatedAssignment) => {
-      return axios.put(
-        `${import.meta.env.VITE_APIURL}/assignments/${id}`,
+      return axiosSecure.put(`/assignments/${id}`,
         updatedAssignment
       );
     },

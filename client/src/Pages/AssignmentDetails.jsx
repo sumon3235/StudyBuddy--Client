@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
+import axiosSecure from "../utils/axiosSecure";
 
 const AssignmentDetails = () => {
   const { id } = useParams();
@@ -11,8 +11,7 @@ const AssignmentDetails = () => {
   const { data: assignment = {}, isLoading } = useQuery({
     queryKey: ["assignment", id],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_APIURL}/assignments/${id}`,
+      const res = await axiosSecure.get(`/assignments/${id}`,
       );
       return res.data;
     },
@@ -41,8 +40,7 @@ const AssignmentDetails = () => {
       obtainedMarks: "",
       feedback: "",
     };
-    axios
-      .post(`${import.meta.env.VITE_APIURL}/submissions`, submissionData)
+    axiosSecure.post(`/submissions`, submissionData)
       .then((res) => {
         if (res.data.insertedId) {
           toast.success("Assignment submitted successfully!");
@@ -125,15 +123,27 @@ const AssignmentDetails = () => {
             </div>
 
             {/* Take Assignment Button */}
+            {/* Take Assignment Button */}
             <div className="card-actions justify-end mt-2">
-              <button
-                className="btn btn-primary px-8"
-                onClick={() =>
-                  document.getElementById("submit_modal").showModal()
-                }
-              >
-                Take Assignment
-              </button>
+              {user?.email === assignment.creatorEmail ? (
+                <div
+                  className="tooltip tooltip-error"
+                  data-tip="You cannot submit your own assignment"
+                >
+                  <button className="btn btn-primary px-8" disabled>
+                    Take Assignment
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="btn btn-primary px-8"
+                  onClick={() =>
+                    document.getElementById("submit_modal").showModal()
+                  }
+                >
+                  Take Assignment
+                </button>
+              )}
             </div>
           </div>
         </div>

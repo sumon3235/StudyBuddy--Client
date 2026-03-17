@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
+import axiosSecure from "../utils/axiosSecure";
 
 const GiveMarks = () => {
   const { id } = useParams();
@@ -10,9 +10,7 @@ const GiveMarks = () => {
   const { data: submission = {}, isLoading } = useQuery({
     queryKey: ["submission", id],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_APIURL}/submissions/${id}`
-      );
+      const res = await axiosSecure.get(`/submissions/${id}`);
       return res.data;
     },
   });
@@ -28,10 +26,11 @@ const GiveMarks = () => {
     }
 
     try {
-      const res = await axios.patch(
-        `${import.meta.env.VITE_APIURL}/submissions/${id}`,
-        { obtainedMarks: marks, feedback, status: "completed" }
-      );
+      const res = await axiosSecure.patch(`/submissions/${id}`, {
+        obtainedMarks: marks,
+        feedback,
+        status: "completed",
+      });
       if (res.data.modifiedCount > 0) {
         toast.success("Marks submitted successfully!");
         navigate("/pending-assignments");
@@ -51,7 +50,6 @@ const GiveMarks = () => {
   return (
     <div className="min-h-screen bg-base-200 py-12">
       <div className="max-w-3xl mx-auto px-4">
-
         {/* Title */}
         <div className="text-center mb-8">
           <h2 className="nunito-font text-4xl font-bold">Give Marks</h2>
@@ -62,7 +60,6 @@ const GiveMarks = () => {
 
         <div className="card bg-base-100 shadow-xl border border-base-300">
           <div className="card-body gap-6">
-
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
               <h3 className="nunito-font text-2xl font-bold text-primary">
@@ -101,9 +98,9 @@ const GiveMarks = () => {
                 <p className="text-sm text-base-content/50 mb-2">
                   Submitted Document
                 </p>
-                
+
                 <a
-                  href={submission.googleDocsLink} 
+                  href={submission.googleDocsLink}
                   target="_blank"
                   rel="noreferrer"
                   className="btn btn-sm btn-secondary btn-outline gap-2"
@@ -129,7 +126,6 @@ const GiveMarks = () => {
 
             {/* Marks Form */}
             <form onSubmit={handleGiveMarks} className="space-y-4">
-
               {/* Marks */}
               <div className="form-control">
                 <label className="label">
@@ -165,12 +161,9 @@ const GiveMarks = () => {
               <button type="submit" className="btn btn-primary w-full mt-2">
                 Submit Marks
               </button>
-
             </form>
-
           </div>
         </div>
-
       </div>
     </div>
   );

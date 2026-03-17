@@ -20,8 +20,7 @@ const Register = () => {
         const photo = form.photo.value;
 
         createUser(email, password)
-        .then((res) => {
-            console.log(res.user)
+        .then(() => {
             toast.success('Registation Successful')
             navigate(from)
             // update profile information

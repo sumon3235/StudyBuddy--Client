@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Link } from "react-router";
 import useAuth from "../Providers/useAuth";
+import axiosSecure from "../utils/axiosSecure";
 
 const PendingAssignments = () => {
     const { user } = useAuth();
   const { data: pendingAssignments = [], isLoading } = useQuery({
     queryKey: ["pending-assignments"],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_APIURL}/submissions`);
+      const res = await axiosSecure.get(`/submissions`);
       return res.data;
     },
   });

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import useAuth from "../Providers/useAuth";
+import axiosSecure from "../utils/axiosSecure";
 
 const MyAssignments = () => {
   const { user } = useAuth();
@@ -8,8 +8,7 @@ const MyAssignments = () => {
   const { data: myAssignments = [], isLoading } = useQuery({
     queryKey: ["my-assignments", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_APIURL}/my-assignments?email=${user?.email}`
+      const res = await axiosSecure.get(`/my-assignments?email=${user?.email}`
       );
       return res.data;
     },

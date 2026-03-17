@@ -5,6 +5,7 @@ import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import axiosSecure from "../utils/axiosSecure";
 
 const CreateAssignment = () => {
   const { user } = useAuth();
@@ -13,10 +14,7 @@ const CreateAssignment = () => {
   // Post a Date With Transtack Query
   const { mutate, isPending } = useMutation({
     mutationFn: (assignment) => {
-      return axios.post(
-        `${import.meta.env.VITE_APIURL}/add-assignments`,
-        assignment,
-      );
+      return axiosSecure.post(`/add-assignments`, assignment);
     },
     onSuccess: () => {
       toast.success("Assignments Created Successfully");
