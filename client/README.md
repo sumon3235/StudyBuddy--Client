@@ -6,8 +6,7 @@ StudyBuddy is an online group study platform where registered users can create a
 
 ## 🔗 Live URL
 
-- **Client:** [https://studybuddy-173df.web.app](https://studybuddy-173df.web.app)
-- **Server:** [https://studybuddy-server.vercel.app](https://studybuddy-server.vercel.app)
+- **Client:** [https://studybuddy-173df.web.app/](https://studybuddy-173df.web.app)
 
 ## ✨ Key Features
 
@@ -90,7 +89,7 @@ nodemon index.js
 
 **Client `.env.local`:**
 ```
-VITE_APIURL=http://localhost:5000
+<!-- VITE_APIURL=http://localhost:5000 -->
 VITE_API_KEY=your_firebase_api_key
 VITE_AUTH_DOMAIN=your_firebase_auth_domain
 VITE_PROJECT_ID=your_firebase_project_id

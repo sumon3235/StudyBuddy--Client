@@ -52,7 +52,7 @@ const MyAssignments = () => {
                   <th>Total Marks</th>
                   <th>Obtained Marks</th>
                   <th>Status</th>
-                  <th>Feedback</th>
+                  <th className="hidden md:table-cell">Feedback</th>
                 </tr>
               </thead>
 
@@ -89,7 +89,7 @@ const MyAssignments = () => {
                     </td>
 
                     {/* Feedback */}
-                    <td className="text-base-content/60 text-sm max-w-xs">
+                    <td className="text-base-content/60 text-sm max-w-xs hidden md:table-cell">
                       {assignment.feedback !== ""
                         ? assignment.feedback
                         : "—"}

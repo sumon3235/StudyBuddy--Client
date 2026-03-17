@@ -41,7 +41,8 @@ const Navbar = () => {
 
             {/* Large Devive */}
             <ul
-              tabIndex="-1"
+            onClick={()=> document.activeElement?.blur()}
+              tabIndex="0"
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
@@ -90,6 +91,7 @@ const Navbar = () => {
                   </div>
                 </div>
                 <ul
+                onClick={()=> document.activeElement?.blur()}
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
                 >
