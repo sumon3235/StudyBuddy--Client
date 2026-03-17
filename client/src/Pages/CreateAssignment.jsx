@@ -4,14 +4,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
 const CreateAssignment = () => {
   const { user } = useAuth();
   const [dueDate, setDueDate] = useState(null);
 
   // Post a Date With Transtack Query
-  const {mutate, isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (assignment) => {
       return axios.post(
         `${import.meta.env.VITE_APIURL}/add-assignments`,
@@ -26,7 +26,7 @@ const CreateAssignment = () => {
     },
   });
 
-      const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
 
@@ -39,17 +39,18 @@ const CreateAssignment = () => {
       dueDate: dueDate,
       creatorEmail: user?.email,
       creatorName: user?.displayName,
+      status: "pending",
+      obtainedMarks: "",
+      feedback: "",
     };
 
     mutate(assignment, {
       onSuccess: () => {
         form.reset();
         setDueDate(null);
-      }
-    })
+      },
+    });
   };
-
-
 
   return (
     <div className="min-h-screen bg-base-200 py-12">
@@ -165,8 +166,12 @@ const CreateAssignment = () => {
 
             {/* Submit Button */}
             <div className="form-control mt-2">
-              <button disabled={isPending} type="submit" className="btn btn-primary w-full">
-                {isPending ? 'Creating...' : 'Create Assignment'}
+              <button
+                disabled={isPending}
+                type="submit"
+                className="btn btn-primary w-full"
+              >
+                {isPending ? "Creating..." : "Create Assignment"}
               </button>
             </div>
           </form>

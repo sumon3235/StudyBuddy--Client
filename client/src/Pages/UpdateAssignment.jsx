@@ -2,14 +2,12 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useParams } from "react-router";
-import useAuth from "../Providers/useAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 const UpdateAssignment = () => {
   const { id } = useParams();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [dueDate, setDueDate] = useState(null);
 

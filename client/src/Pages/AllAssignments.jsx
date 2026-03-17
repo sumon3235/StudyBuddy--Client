@@ -200,12 +200,16 @@ const handleModernDelete = (id) => {
       </div>
 
       {/* Pagination btn */}
-      <div className="flex items-center justify-center my-10">
+      <div className="flex items-center justify-center gap-4 my-10">
+   
+          <button className="btn btn-sm" disabled={currentPage === 0} onClick={() =>setCurrentPage(currentPage - 1)}>Prev</button>
+      
         {
           pages.map(page => 
-            <button onClick={() =>setCurrentPage(page)} key={page} className="join-item btn">{page + 1}</button>
+            <button onClick={() =>setCurrentPage(page)} key={page} className={`join-item btn ${currentPage === page ? 'bg-orange-500 text-white' : ''}`}>{page + 1}</button>
           )
         }
+        <button onClick={()=> setCurrentPage(currentPage + 1)} disabled={currentPage === numberOfPage - 1} className="btn btn-sm">Next</button>
       </div>
     </div>
   );
